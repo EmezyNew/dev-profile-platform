@@ -2,6 +2,9 @@
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Code, User, Star } from 'lucide-react';
 
+// Import the correct briefcase icon
+import { Briefcase } from 'lucide-react';
+
 const Hero = () => {
   return (
     <section className="hero-gradient min-h-[90vh] pt-32 pb-20 relative overflow-hidden">
