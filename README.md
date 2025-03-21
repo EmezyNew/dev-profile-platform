@@ -1,69 +1,78 @@
-# Welcome to your Lovable project
 
-## Project info
+# Developer Portfolio Platform
 
-**URL**: https://lovable.dev/projects/e4548651-ff5a-4c2a-82e2-16d550c5e1ca
+A full-stack application for developers to showcase their portfolios, projects, and skills.
 
-## How can I edit this code?
+## Project Structure
 
-There are several ways of editing your application.
+This project consists of two main parts:
 
-**Use Lovable**
+- `frontend/` - React frontend application
+- `backend/` - Go backend API with MongoDB
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e4548651-ff5a-4c2a-82e2-16d550c5e1ca) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+Follow these instructions to set up and run both the frontend and backend parts of the application.
 
-**Use your preferred IDE**
+### Prerequisites
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Node.js 18+ and npm for the frontend
+- Go 1.19+ for the backend
+- MongoDB 4.0+ for the database
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Backend Setup
 
-Follow these steps:
+1. Make sure MongoDB is installed and running:
+   ```bash
+   # Start MongoDB (the command may vary depending on your installation)
+   mongod
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+2. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+3. Install dependencies:
+   ```bash
+   go mod tidy
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+4. Run the backend server:
+   ```bash
+   go run main.go
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+The backend server will start on `http://localhost:8080`.
 
-**Edit a file directly in GitHub**
+## Frontend Setup
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
 
-**Use GitHub Codespaces**
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-## What technologies are used for this project?
+The frontend development server will start on `http://localhost:3000`.
 
-This project is built with .
+## Features
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- User profiles with skills, bio, and social links
+- Project portfolios with descriptions, technologies, and links
+- Review and rating system for developers
+- Search functionality for finding developers by name or skills
+- Responsive design for mobile and desktop
 
-## How can I deploy this project?
+## API Documentation
 
-Simply open [Lovable](https://lovable.dev/projects/e4548651-ff5a-4c2a-82e2-16d550c5e1ca) and click on Share -> Publish.
+For detailed API documentation, see the [Backend README](./backend/README.md).
 
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)

@@ -9,8 +9,6 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"your-project/backend/controllers"
 	"your-project/backend/repositories"
@@ -23,43 +21,43 @@ const (
 )
 
 func main() {
-	// Подключение к MongoDB
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	clientOptions := options.Client().ApplyURI(MongoURI)
-	client, err := mongo.Connect(ctx, clientOptions)
+	// Connect to MongoDB
+	client, err := ConnectToMongoDB(MongoURI)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer client.Disconnect(ctx)
+	defer func() {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		client.Disconnect(ctx)
+	}()
 
-	// Проверка соединения
-	err = client.Ping(ctx, nil)
+	// Setup database (create indexes, etc.)
+	err = SetupDatabase(client, DatabaseName)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Failed to setup database:", err)
 	}
-	log.Println("Connected to MongoDB!")
 
-	// Создание репозиториев
+	// Create repositories
 	userRepo := repositories.NewUserRepository(client, DatabaseName)
 	projectRepo := repositories.NewProjectRepository(client, DatabaseName)
 	reviewRepo := repositories.NewReviewRepository(client, DatabaseName)
 
-	// Создание сервисов
+	// Create services
 	userService := services.NewUserService(userRepo)
 	projectService := services.NewProjectService(projectRepo, userRepo)
 	reviewService := services.NewReviewService(reviewRepo, userRepo)
 
-	// Создание контроллеров
+	// Create controllers
 	userController := controllers.NewUserController(userService)
 	projectController := controllers.NewProjectController(projectService)
 	reviewController := controllers.NewReviewController(reviewService)
 	searchController := controllers.NewSearchController(userService, projectService)
 
-	// Настройка Gin
+	// Setup Gin
 	router := gin.Default()
 
-	// Настройка CORS
+	// Setup CORS
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:3000"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
@@ -69,7 +67,7 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	// Регистрация маршрутов
+	// Register routes
 	api := router.Group("/api")
 	{
 		userController.RegisterRoutes(api)
@@ -78,15 +76,15 @@ func main() {
 		searchController.RegisterRoutes(api)
 	}
 
-	// Добавим тестовый маршрут для проверки работы API
+	// Add a test route for health checking
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"status": "ok",
+			"status":  "ok",
 			"message": "API is running",
 		})
 	})
 
-	// Запуск сервера
+	// Start server
 	log.Println("Server running on :8080")
 	if err := router.Run(":8080"); err != nil {
 		log.Fatal("Failed to start server:", err)
